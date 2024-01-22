@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import Home from "./index";
+import React from "react";
 
 describe("When Form is created", () => {
   it("a list of fields card is displayed", async () => {
@@ -7,7 +8,7 @@ describe("When Form is created", () => {
     await screen.findByText("Email");
     await screen.findByText("Nom");
     await screen.findByText("Prénom");
-    await screen.findByText("Personel / Entreprise");
+    await screen.findByText("Personnel / Entreprise");
   });
 
   describe("and a click is triggered on the submit button", () => {
@@ -24,21 +25,27 @@ describe("When Form is created", () => {
       await screen.findByText("Message envoyé !");
     });
   });
-
 });
-
 
 describe("When a page is created", () => {
   it("a list of events is displayed", () => {
-    // to implement
-  })
+    render(<Home />);
+    const eventList = screen.getByTestId("event-list");
+    expect(eventList).toBeDefined();
+  });
   it("a list a people is displayed", () => {
-    // to implement
-  })
+    render(<Home />);
+    const peopleList = screen.getByTestId("people-list");
+    expect(peopleList).toBeDefined();
+  });
   it("a footer is displayed", () => {
-    // to implement
-  })
+    render(<Home />);
+    const testFooter = screen.getByTestId("test-footer");
+    expect(testFooter).toBeDefined();
+  });
   it("an event card, with the last event, is displayed", () => {
-    // to implement
-  })
+    render(<Home />);
+    const lastEvent = screen.getByTestId("last-event");
+    expect(lastEvent).toBeDefined();
+  });
 });
