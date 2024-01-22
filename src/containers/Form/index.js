@@ -6,7 +6,7 @@ import Button, { BUTTON_TYPES } from "../../components/Button";
 
 const mockContactApi = () =>
   new Promise((resolve) => {
-    setTimeout(resolve, 1000);
+    setTimeout(resolve, 800);
   });
 
 const Form = ({ onSuccess, onError }) => {
@@ -36,7 +36,7 @@ const Form = ({ onSuccess, onError }) => {
           <Select
             selection={["Personel", "Entreprise"]}
             onChange={() => null}
-            label="Personel / Entreprise"
+            label="Personnel / Entreprise"
             type="large"
             titleEmpty
           />
