@@ -2,7 +2,6 @@ import Menu from "../../containers/Menu";
 import ServiceCard from "../../components/ServiceCard";
 import EventCard from "../../components/EventCard";
 import PeopleCard from "../../components/PeopleCard";
-
 import "./style.scss";
 import EventList from "../../containers/Events";
 import Slider from "../../containers/Slider";
@@ -13,7 +12,11 @@ import Modal from "../../containers/Modal";
 import { useData } from "../../contexts/DataContext";
 
 const Page = () => {
-  const { last } = useData();
+  const { data } = useData();
+  const last = data?.events.sort((evtA, evtB) =>
+    new Date(evtA.date) > new Date(evtB.date) ? -1 : 1
+  )[0];
+
   return (
     <>
       <header>
@@ -24,7 +27,9 @@ const Page = () => {
           <Slider />
         </section>
         <section className="ServicesContainer">
-          <h2 className="Title">Nos services</h2>
+          <h2 className="Title" id="nos-services">
+            Nos services
+          </h2>
           <p>Nous organisons des événements sur mesure partout dans le monde</p>
           <div className="ListContainer">
             <ServiceCard imageSrc="/images/priscilla-du-preez-Q7wGvnbuwj0-unsplash1.png">
@@ -36,7 +41,7 @@ const Page = () => {
             </ServiceCard>
             <ServiceCard imageSrc="/images/hall-expo.png">
               <h3>Conférences</h3>
-              724 events vous propose d’organiser votre évènement, quelle que
+              77 events vous propose d’organiser votre évènement, quelle que
               soit sa taille, en s’adaptant à votre demande et à vos demandes.
               En tant que spécialistes de l’évènementiel, nous saurons trouver
               le lieu parfait ainsi que des solutions inédites pour capter votre
@@ -53,13 +58,17 @@ const Page = () => {
           </div>
         </section>
         <section className="EventsContainer">
-          <h2 className="Title">Nos réalisations</h2>
+          <h2 className="Title" id="nos-realisations">
+            Nos réalisations
+          </h2>
           <EventList />
         </section>
         <section className="PeoplesContainer">
-          <h2 className="Title">Notre équipe</h2>
+          <h2 className="Title" id="notre-equipe">
+            Notre équipe
+          </h2>
           <p>Une équipe d’experts dédiés à l’ogranisation de vos événements</p>
-          <div className="ListContainer">
+          <div className="ListContainer" data-testid="people-list">
             <PeopleCard
               imageSrc="/images/stephanie-liverani-Zz5LQe-VSMY-unsplash.png"
               name="Samira"
@@ -111,27 +120,29 @@ const Page = () => {
           </Modal>
         </div>
       </main>
-      <footer className="row">
-        <div className="col presta">
+      <footer className="row" data-testid="test-footer">
+        <div className="col presta" data-testid="last-event">
           <h3>Notre derniére prestation</h3>
-          <EventCard
-            imageSrc={last?.cover}
-            title={last?.title}
-            date={new Date(last?.date)}
-            small
-            label="boom"
-          />
+          {last && last.cover && last.title ? (
+            <EventCard
+              imageSrc={last?.cover}
+              title={last?.title}
+              date={new Date(last?.date)}
+              small
+              label="boom"
+            />
+          ) : null}
         </div>
         <div className="col contact">
           <h3>Contactez-nous</h3>
           <address>45 avenue de la République, 75000 Paris</address>
           <div>01 23 45 67 89</div>
-          <div>contact@724events.com</div>
+          <div>contact@77events.com</div>
           <div>
             <a href="#twitch" aria-label="Twitch">
               <Icon name="twitch" />
             </a>
-            <a href="#facebook" aria-label="Facbook">
+            <a href="#facebook" aria-label="Facebook">
               <Icon name="facebook" />
             </a>
             <a href="#twitter" aria-label="Twitter">
