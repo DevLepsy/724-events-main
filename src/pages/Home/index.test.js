@@ -28,24 +28,39 @@ describe("When Form is created", () => {
 });
 
 describe("When a page is created", () => {
-  it("a list of events is displayed", () => {
+  beforeEach(() => {
     render(<Home />);
+  });
+
+  it("should display a list of events", () => {
+    // Arrange: Already done in beforeEach
+    // Act
     const eventList = screen.getByTestId("event-list");
+    // Assert
     expect(eventList).toBeDefined();
   });
-  it("a list a people is displayed", () => {
-    render(<Home />);
+
+  it("should display a list of people", () => {
+    // Arrange: Already done in beforeEach
+    // Act
     const peopleList = screen.getByTestId("people-list");
+    // Assert
     expect(peopleList).toBeDefined();
   });
-  it("a footer is displayed", () => {
-    render(<Home />);
+
+  it("should display a footer", () => {
+    // Arrange: Already done in beforeEach
+    // Act
     const testFooter = screen.getByTestId("test-footer");
+    // Assert
     expect(testFooter).toBeDefined();
   });
-  it("an event card, with the last event, is displayed", () => {
-    render(<Home />);
+
+  it("should display an event card with the last event", () => {
+    // Arrange: Already done in beforeEach
+    // Act
     const lastEvent = screen.getByTestId("last-event");
+    // Assert
     expect(lastEvent).toBeDefined();
   });
 });
