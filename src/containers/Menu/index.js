@@ -1,4 +1,5 @@
 /* eslint-disable no-return-assign */
+import React from "react";
 import Button from "../../components/Button";
 import Logo from "../../components/Logo";
 
@@ -18,7 +19,10 @@ const Menu = () => (
         <a href="#notre-equipe">Notre équipe</a>
       </li>
     </ul>
-    <Button title="contact" onClick={() => (window.document.location.hash = "#contact")}>
+    <Button
+      title="contact"
+      onClick={() => (window.document.location.hash = "#contact")}
+    >
       Contact
     </Button>
   </nav>

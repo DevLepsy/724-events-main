@@ -1,3 +1,4 @@
+import React from "react";
 import Menu from "../../containers/Menu";
 import ServiceCard from "../../components/ServiceCard";
 import EventCard from "../../components/EventCard";
@@ -137,7 +138,7 @@ const Page = () => {
           <h3>Contactez-nous</h3>
           <address>45 avenue de la République, 75000 Paris</address>
           <div>01 23 45 67 89</div>
-          <div>contact@77events.com</div>
+          <div>contact@724events.com</div>
           <div>
             <a href="#twitch" aria-label="Twitch">
               <Icon name="twitch" />
