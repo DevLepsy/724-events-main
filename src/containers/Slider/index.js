@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useData } from "../../contexts/DataContext";
 import { getMonth } from "../../helpers/Date";
+
 import "./style.scss";
 
 const Slider = () => {
@@ -9,23 +10,26 @@ const Slider = () => {
   const byDateDesc = data?.focus.sort((evtA, evtB) =>
     new Date(evtA.date) < new Date(evtB.date) ? -1 : 1
   );
+
   const nextCard = () => {
-    if (byDateDesc) {
-      setTimeout(
-        () => setIndex(index < byDateDesc.length - 1 ? index + 1 : 0),
-        5000
-      );
-    }
+    setTimeout(() => {
+      setIndex((index + 1) % (byDateDesc?.length || 0));
+    }, 5000);
   };
+
   useEffect(() => {
     nextCard();
   });
+
+  function generateUniqueKey() {
+    return Math.random().toString(36).substring(2) + Date.now().toString(36);
+  }
+
   return (
     <div className="SlideCardList">
       {byDateDesc?.map((event, idx) => (
-        <div key={event.title}>
+        <div key={`${event.date}-${generateUniqueKey()}`}>
           <div
-            key={event.title}
             className={`SlideCard SlideCard--${
               index === idx ? "display" : "hide"
             }`}
@@ -39,15 +43,19 @@ const Slider = () => {
               </div>
             </div>
           </div>
+
           <div className="SlideCard__paginationContainer">
             <div className="SlideCard__pagination">
               {byDateDesc.map((_, radioIdx) => (
                 <input
-                  key={`${radioIdx + 1}`}
+                  key={generateUniqueKey()}
                   type="radio"
                   name="radio-button"
                   checked={index === radioIdx}
-                  readOnly
+                  onChange={() => {}}
+                  // onClick={() => {
+                  //   setIndex(radioIdx);
+                  // }}
                 />
               ))}
             </div>
