@@ -26,7 +26,7 @@ const Slider = () => {
       if (!paused) {
         nextCard();
       }
-    }, 1000);
+    }, 5000);
     return () => clearInterval(interval);
   }, [index, paused]); // Déclenche le changement d'image lorsque l'index ou l'état de pause change
 
