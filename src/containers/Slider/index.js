@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useData } from "../../contexts/DataContext";
 import { getMonth } from "../../helpers/Date";
 
@@ -7,27 +7,35 @@ import "./style.scss";
 const Slider = () => {
   const { data } = useData();
   const [index, setIndex] = useState(0);
-  const byDateDesc = useMemo(
-    () =>
-      data?.focus.sort((evtA, evtB) =>
-        new Date(evtA.date) < new Date(evtB.date) ? 1 : -1
-      ),
-    [data]
+  const byDateDesc = data?.focus.sort((evtA, evtB) =>
+    new Date(evtA.date) < new Date(evtB.date) ? 1 : -1
   );
 
+  // Ajout d'un état pour gérer la pause
   const [paused, setPaused] = useState(false);
-  const [pausedIndex, setPausedIndex] = useState(0);
 
+  // Fonction pour avancer à la prochaine image
+  const nextCard = () => {
+    setIndex((prevIndex) => (prevIndex + 1) % byDateDesc.length);
+  };
+
+  // Utilisation de useEffect pour déclencher le changement d'image
+  useEffect(() => {
+    // Si le slider n'est pas en pause, déclenche le changement d'image toutes les 5 secondes
+    const interval = setInterval(() => {
+      if (!paused) {
+        nextCard();
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [index, paused]); // Déclenche le changement d'image lorsque l'index ou l'état de pause change
+
+  // Gestion de la pression de la barre d'espace pour mettre en pause ou reprendre le slider
   useEffect(() => {
     const handleKeyPress = (event) => {
       if (event.code === "Space") {
-        event.preventDefault();
-        setPaused((prevPaused) => {
-          if (!prevPaused) {
-            setPausedIndex(index);
-          }
-          return !prevPaused;
-        });
+        event.preventDefault(); // Empêche le comportement par défaut (défilement de la page)
+        setPaused((prevPaused) => !prevPaused);
       }
     };
 
@@ -35,71 +43,43 @@ const Slider = () => {
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [index]);
+  }, []); // Utilisation d'un tableau vide pour exécuter cette fonction uniquement une fois lors du montage
 
-  useEffect(() => {
-    let intervalId;
-    if (!paused) {
-      intervalId = setInterval(() => {
-        setIndex((prevIndex) => (prevIndex + 1) % (byDateDesc?.length || 0));
-      }, 5000);
-    }
-    return () => clearInterval(intervalId);
-  }, [paused, byDateDesc]);
-
-  function generateUniqueKey() {
-    return Math.random().toString(36).substring(2) + Date.now().toString(36);
-  }
-
-  const renderedContent = useMemo(
-    () => (
-      <div className="SlideCardList">
-        {byDateDesc?.map((event, idx) => (
-          <div key={`${event.date}-${generateUniqueKey()}`}>
-            <div
-              className={`SlideCard SlideCard--${
-                paused
-                  ? pausedIndex === idx
-                    ? "display"
-                    : "hide"
-                  : index === idx
-                  ? "display"
-                  : "hide"
-              }`}
-            >
-              <img src={event.cover} alt="forum" />
-              <div className="SlideCard__descriptionContainer">
-                <div className="SlideCard__description">
-                  <h3>{event.title}</h3>
-                  <p>{event.description}</p>
-                  <div>{getMonth(new Date(event.date))}</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="SlideCard__paginationContainer">
-              <div className="SlideCard__pagination">
-                {byDateDesc.map((_, radioIdx) => (
-                  <input
-                    key={generateUniqueKey()}
-                    type="radio"
-                    name="radio-button"
-                    checked={
-                      paused ? pausedIndex === radioIdx : index === radioIdx
-                    }
-                    onChange={() => {}}
-                  />
-                ))}
-              </div>
+  return (
+    <div className="SlideCardList">
+      {byDateDesc?.map((event, idx) => (
+        <div
+          key={event.title}
+          className={`SlideCard SlideCard--${
+            index === idx ? "display" : "hide"
+          }`}
+        >
+          <img src={event.cover} alt="forum" />
+          <div className="SlideCard__descriptionContainer">
+            <div className="SlideCard__description">
+              <h3>{event.title}</h3>
+              <p>{event.description}</p>
+              <div>{getMonth(new Date(event.date))}</div>
             </div>
           </div>
-        ))}
-      </div>
-    ),
-    [byDateDesc, index, paused, pausedIndex]
-  );
+        </div>
+      ))}
 
-  return renderedContent;
+      <div className="SlideCard__paginationContainer">
+        <div className="SlideCard__pagination">
+          {byDateDesc?.map((focus, radioIdx) => (
+            <input
+              key={`${focus.title}`}
+              type="radio"
+              name="radio-button"
+              checked={index === radioIdx}
+              readOnly
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Slider;
